@@ -38,7 +38,7 @@ def next_card():
     flip_timer = window.after(3000, flip)
 
 def flip():
-    '''function to show the engish version of the word'''
+    '''function to show the english version of the word'''
     global word_on_card
     canvas.itemconfigure(upper_word, text="English", fill="white")
     canvas.itemconfigure(lower_word, text=word_on_card["English"], fill="white")
