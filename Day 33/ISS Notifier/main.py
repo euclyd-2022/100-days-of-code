@@ -26,6 +26,7 @@ def is_it_dark():
     """check is the current hour is nighttime"""
     global now, sunrise, sunset
     #pycharm simplified the comaparison
+    #won't work as 22hr is not less than 03 sunrise
     if int(sunrise) > int(now.hour) > int(sunset):
         print("darkness descends")
         return True
@@ -72,7 +73,8 @@ sunrise = sunrise.split("T")[1].split(":")[0]
 sunset = data["results"]["sunset"].split("T")[1].split(":")[0]
 now = dt.datetime.now()
 
-
+print(f"sunrise: {sunrise}\n sunset {sunset}\n now:{now.hour} s{now.second}\n isslat:{iss_latitude}\n my lat:{MY_LAT}\n isslong:{iss_longitude}\n"
+      f" My Long{MY_LONG}")
 
 #If the ISS is close to my current position
 # and it is currently dark
@@ -88,5 +90,3 @@ while True:
         send_mail()
 
 
-print(f"sunrise: {sunrise}\n sunset {sunset}\n now:{now.hour} s{now.second}\n isslat:{iss_latitude}\n my lat:{MY_LAT}\n isslong:{iss_longitude}\n"
-      f" My Long{MY_LONG}")
