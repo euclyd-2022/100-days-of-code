@@ -1,5 +1,5 @@
 import requests
-
+import html
 parameters = {
     "amount": "10",
     "type": "boolean",
@@ -11,7 +11,8 @@ response.raise_for_status()
 data = response.json()
 
 
-question_data = data["results"]
+question_data = html.unescape(data["results"])
+
 
 
 
