@@ -29,7 +29,7 @@ for n in range(11):
    weather_id.append(data["hourly"][n]["weather"][0]["id"])
 
 if min(weather_id) < 700:
-    #add twilio account for SMS update or SMTP for email and schedule to run via PythonAnywhere every day
+    #add twilio account for SMS update or SMTP for email and schedule to run via PythonAnywhere everyday
     with smtplib.SMTP("smtp.gmail.com") as connection:
         connection.starttls()
         connection.login(user=MY_EMAIL, password=MY_PASSWORD)
