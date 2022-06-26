@@ -1,13 +1,16 @@
 import requests
 import smtplib
+import os
+
+
 
 MY_LAT = 53.424150
 MY_LONG = -2.175040
 API_KEY = "4f3ac6ddd48d5bcde102213c02a7bf27"
 API_URL = "https://api.openweathermap.org/data/2.5/onecall"
 MY_EMAIL = "euclyd@gmail.com"
-MY_PASSWORD = "uzwpjqdzgfpzsnxy"
 TO = "euclyd@gmail.com"
+GMAIL_PASSWORD = os.environ.get("GMAIL_PASSWORD")
 parameters = {
     "lat": MY_LAT,
     "lon": MY_LONG,
@@ -32,7 +35,7 @@ if min(weather_id) < 700:
     #add twilio account for SMS update or SMTP for email and schedule to run via PythonAnywhere everyday
     with smtplib.SMTP("smtp.gmail.com") as connection:
         connection.starttls()
-        connection.login(user=MY_EMAIL, password=MY_PASSWORD)
+        connection.login(user=MY_EMAIL, password=GMAIL_PASSWORD)
         connection.sendmail(from_addr=MY_EMAIL, to_addrs=TO, msg=f"Subject: Rain forecast today\n\nDon't forget an umbrella!")
 
 
