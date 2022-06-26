@@ -2,13 +2,15 @@ import requests
 import datetime as dt
 import smtplib
 import time
+import os
+
 
 MY_EMAIL = "euclyd@gmail.com"
-PASSWORD = "uzwpjqdzgfpzsnxy"
+GMAIL_PASSWORD = os.environ.get("GMAIL_PASSWORD")
 
 #floats
-MY_LAT = 53.424150
-MY_LONG = -2.175040
+MY_LAT = 54.424150
+MY_LONG = -2.575040
 
 def check_position():
     # Your position is within +5 or -5 degrees of the ISS position.
