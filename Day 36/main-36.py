@@ -1,7 +1,7 @@
 import requests
 import datetime as dt
-TICKER = "NIO"
-COMPANY_NAME = "Nio"
+TICKER = "TSLA"
+COMPANY_NAME = "Tesla"
 
 today =dt.date.today()
 yesterday = str(today - dt.timedelta(days=3))
