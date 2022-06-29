@@ -2,7 +2,7 @@ import requests
 import datetime as dt
 TICKER = "TSLA"
 COMPANY_NAME = "Tesla"
-
+#timedate doesn't take into account weekend, better to get the data by array index
 today =dt.date.today()
 yesterday = str(today - dt.timedelta(days=3))
 day_before = str(today - dt.timedelta(days=4))
@@ -23,7 +23,7 @@ def get_stock_change(name: str):
 ## STEP 2: Use https://newsapi.org
 # Instead of printing ("Get News"), actually get the first 3 news pieces for the COMPANY_NAME.
 def get_news(company: str):
-    url = f"https://newsapi.org/v2/everything?q={company}&from={yesterday}&domains=seekingalpha.com&datatype=json&sortBy=publishedAt&apiKey=8e0d66080e024405813014e2b2a6eff3"
+    url = f"https://newsapi.org/v2/everything?qInTitle={company}&from={yesterday}&domains=seekingalpha.com&datatype=json&sortBy=publishedAt&apiKey=8e0d66080e024405813014e2b2a6eff3"
     r = requests.get(url)
     data = r.json()
     for n in range(3):

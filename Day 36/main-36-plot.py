@@ -48,29 +48,37 @@ def chart(data_list):
 
 
 def get_news(company: str):
-    url = f"https://newsapi.org/v2/everything?q={company}&from={yesterday}&domains=seekingalpha.com&datatype=json&sortBy=publishedAt&apiKey=8e0d66080e024405813014e2b2a6eff3"
+    url = f"https://newsapi.org/v2/everything?qInTitle={company}&from={yesterday}&domains=seekingalpha.com&datatype=json&sortBy=publishedAt&apiKey=8e0d66080e024405813014e2b2a6eff3"
     try:
         r = requests.get(url)
     except:
         print ("error getting news")
-    data = r.json()
-    for n in range(3):
-        title = data["articles"][n]["title"]
-        news = data["articles"][n]["description"]
-        return f"Headline: {title}\nBrief: {news}"
+    data = r.json()["articles"]
+    three_articles = data[:3]
+    # for n in range(3):
+    #     title = data["articles"][n]["title"]
+    #     news = data["articles"][n]["description"]
+
+    formatted_list = [f"{article['title']}: {article['description']}" for article in three_articles]
+    for article in formatted_list:
+        #canvas.itemconfig(canvas_text, text=formatted_list)
+        return(formatted_list)
 
 
 window = Tk()
 window.title("Stonks")
+window.geometry("500x350")
 window.config(padx=50, pady=50)
-canvas = Canvas(width=800, height=600)
-canvas.create_text(500, 500, text=get_news(TICKER))
-canvas.grid(column=0, row=0)
+t = Text(window, height=100, width=300)
+#canvas_text = canvas.create_text(500, 500, text=get_news(COMPANY_NAME))
+t.pack()
+t.insert(END, get_news(COMPANY_NAME))
 
-website_label = Label(text="")
-website_label.grid(column=0, row=1)
+#website_label = Label(text="")
+#website_label.grid(column=0, row=1)
 
 chart(api_data(TICKER))
+
 #get_stock_change(TICKER)
 
 
@@ -80,7 +88,7 @@ chart(api_data(TICKER))
 # #if -1.0 < get_stock_change(TICKER) > 1.0:
 # if difference < 1.0 or difference > 5.0:
 #     print(f"{TICKER} {int(difference)}% News:")
-    #get_news(COMPANY_NAME)
+    #
 
 
 
