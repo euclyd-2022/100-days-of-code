@@ -58,38 +58,28 @@ def get_news(company: str):
     # for n in range(3):
     #     title = data["articles"][n]["title"]
     #     news = data["articles"][n]["description"]
+    text = ""
+    formatted_list = [f"{article['title']}: {article['description']}\n\n" for article in three_articles]
+    for item in formatted_list:
+        text += item
 
-    formatted_list = [f"{article['title']}: {article['description']}" for article in three_articles]
-    for article in formatted_list:
-        #canvas.itemconfig(canvas_text, text=formatted_list)
-        return(formatted_list)
+    return text
 
+def chart_button():
+    return chart(api_data(TICKER))
 
 window = Tk()
-window.title("Stonks")
-window.geometry("500x350")
+window.title(COMPANY_NAME)
+#window.geometry("500x350")
 window.config(padx=50, pady=50)
-t = Text(window, height=100, width=300)
-#canvas_text = canvas.create_text(500, 500, text=get_news(COMPANY_NAME))
+label = Label(window, text=COMPANY_NAME).pack()
+
+t = Text(window)
 t.pack()
 t.insert(END, get_news(COMPANY_NAME))
 
-#website_label = Label(text="")
-#website_label.grid(column=0, row=1)
-
-chart(api_data(TICKER))
-
-#get_stock_change(TICKER)
-
-
-#difference = get_stock_change(TICKER)
-
-
-# #if -1.0 < get_stock_change(TICKER) > 1.0:
-# if difference < 1.0 or difference > 5.0:
-#     print(f"{TICKER} {int(difference)}% News:")
-    #
-
+button = Button(window, text="chart", command=chart_button)
+button.pack()
 
 
 window.mainloop()
