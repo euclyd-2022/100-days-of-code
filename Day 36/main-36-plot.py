@@ -78,7 +78,7 @@ t = Text(window)
 t.pack()
 t.insert(END, get_news(COMPANY_NAME))
 
-button = Button(window, text="chart", command=chart_button)
+button = Button(window, text=f"{COMPANY_NAME} chart", command=chart_button)
 button.pack()
 
 
