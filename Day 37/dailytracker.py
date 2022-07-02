@@ -6,6 +6,8 @@ from datetime import datetime
 #create a user account:
 #curl -X POST https://pixe.la/v1/users -d '{"token":"thisissecret", "username":"a-know", "agreeTermsOfService":"yes", "notMinor":"yes"}'
 
+# https://pixe.la/v1/users/euclyd/graphs/workout-tracker.html
+
 ENDPOINT = "https://pixe.la/v1/users"
 USERNAME = "euclyd"
 GRAPH_ENDPOINT = f"{USERNAME}/graphs"
@@ -49,8 +51,7 @@ def addpixel():
     }
     pixel_config = {
         "date": today.strftime("%Y%m%d"),
-        "quantity": "1",
-        "optionalData": "{\"type\":\"Caroline Girvan\"}",
+        "quantity": input("How many times did you workout today?"),
 
     }
     response = requests.post(url=f"{ENDPOINT}/{GRAPH_ENDPOINT}/{GRAPH_ID}", json=pixel_config, headers=header)
