@@ -5,7 +5,8 @@ class FlightData:
     def __init__(self):
         self.kiwi_endpoint = "https://tequila-api.kiwi.com/"
         self.api_key = "1vt9yblXEcFscxKG-isrzGSM7pqtL5At"
-        self.price_list = []
+        # should add the returned data to a dictionary to save on api calls
+        # self.price_list = []
 
     def getcode(self, city_name):
 

@@ -8,7 +8,7 @@ dm = DataManager()
 fs = FlightData()
 sheet_data = dm.get_data()
 
-def send_email():
+def send_email(msg):
     import os
 
     MY_EMAIL = "euclyd@gmail.com"
@@ -18,7 +18,7 @@ def send_email():
         connection.starttls()
         connection.login(user=MY_EMAIL, password=PASSWORD)
         connection.sendmail(from_addr=MY_EMAIL, to_addrs=MY_EMAIL,
-                            msg=f"Subject: Price alert!\n\n")
+                            msg=f"Subject: Price alert!\n\n{msg}")
 
 
 for row in sheet_data:
@@ -33,7 +33,9 @@ for row in sheet_data:
 
     if fs.price < row['lowestPrice']:
 
-        print(f"{row['iataCode']} price now of {fs.price} is lower than usual of {row['lowestPrice']}")
+        msg = f"{row['iataCode']} price now of {fs.price} is lower than usual of {row['lowestPrice']}"
+        # call the smtp function to send an email
+        # send_email(msg)
     else:
         print(f"****{row['iataCode']} price now of {fs.price} is more or the same as the usual price of {row['lowestPrice']}****")
 
