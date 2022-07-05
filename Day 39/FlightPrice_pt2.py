@@ -8,9 +8,9 @@ sheet_data = dm.get_data()
 
 for item in sheet_data:
     if item['iataCode'] == "":
-        from flightcheck import FlightSearch
+        from flightcheck import FlightData
         #create flightsearch object
-        fs = FlightSearch()
+        fs = FlightData()
         #assign the code form kiwitravel to the sheetdata
         item['iataCode'] = fs.getcode(item['city'])
     #update the google speadsheet with the iata airline code
