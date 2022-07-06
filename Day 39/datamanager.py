@@ -18,3 +18,4 @@ class DataManager:
         }
         update_response = requests.put(url=put, json=parameters)
         print(update_response.text)
+        
