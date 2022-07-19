@@ -6,7 +6,7 @@ from selenium.webdriver.common.keys import Keys
 import time
 
 TWITTER_USERNAME = "euclyd"
-TWITTER_PW = ""
+TWITTER_PW = "fQu-849-BkK-sQP"
 
 
 class InternetSpeedTwitterBot:
