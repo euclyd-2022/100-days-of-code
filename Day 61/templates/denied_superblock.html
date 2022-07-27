@@ -1,11 +1,16 @@
-{% extends "bootstrap/base.html" %}
+{% extends "base.html" %}
 
 <head>
 	{% block title %}Access Denied{% endblock %}
 </head>
 <body>
 {% block content %}
-
+{% block styling %}
+{{ super() }}
+h1 {
+color: white;
+}
+{% endblock%}
 
 	<div class="container">
 		<h1>Access Denied </h1>

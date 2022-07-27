@@ -1,15 +1,23 @@
 <!DOCTYPE HTML>
 <html>
+{% extends "bootstrap/base.html" %}
+
 <head>
 	<title>Secrets</title>
 </head>
 <body>
+{% block content %}
 <div class="jumbotron">
 	<div class="container">
 		<h1>Welcome</h1>
 		<p>Are you ready to discover my secret?</p>
-		<button class="btn btn-primary btn-lg" href=" {{ url_for('login') }} ">Login</button>
+		<form action ="{{ url_for('login') }}">
+		<button class="btn btn-primary btn-lg" >Login</button>
+		</form>
 	</div>
 </div>
+{% endblock %}
+
+
 </body>
 </html>
