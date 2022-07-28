@@ -1,0 +1,29 @@
+{% extends 'bootstrap/base.html' %}
+
+{% block title %}Libray{% endblock %}
+{% block content %}
+<script src="https://kit.fontawesome.com/2818b092f8.js" crossorigin="anonymous"></script>
+<body>
+
+<div class="container">
+  <div class="row"></div>
+    <div class="col-sm-12"><h1>My Library</h1>
+<table class="table table-striped">
+    <thead>
+<th></th><th>Title</th><th>Author</th><th>Rating</th><th></th>
+ </thead>
+        <tbody>
+    {% if empty !="" %}
+     <tr><td> {{empty}}</td></tr>
+        {% else %}
+        {% for book in books %}
+<tr><td><a href="{{url_for('home',id=book.id)}}"><i class="fa-solid fa-circle-minus"></i></a></td><td>{{book.title}} </td><td> {{book.author}} </td><td> {{book.rating}}/10</td><td><a href="{{url_for('edit',id=book.id)}}">edit</a></td></tr>
+        {% endfor %}
+        {% endif%}
+        </tbody>
+</table>
+
+<a href="{{url_for('add')}}">Add New Book</a>
+</body>
+</html>
+{% endblock %}
