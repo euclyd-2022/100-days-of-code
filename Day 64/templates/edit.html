@@ -1,0 +1,28 @@
+{% extends 'bootstrap/base.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block styles %}
+  {{ super() }}
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,700">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,700">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+{% endblock %}
+
+{% block title %}Edit Movies{% endblock %}
+
+{% block content %}
+<div class="content">
+  <h1 class="heading">{{movie.title}}</h1>
+    <p class="description">Edit Movie Rating ({{movie.rating}})</p>
+  <form method="POST" action="{{url_for('edit', id=movie.id)}}">
+    <input name="rating" type="range" min="0" max="10" value="{{movie.rating}}">
+           <input type="Submit" value="update">
+
+  </div>
+</form><p>
+  <div class="container-fluid">
+   wtforms version:
+  {{ wtf.quick_form(form, novalidate=True) }}
+</p>
+  </div>
+{% endblock %}
