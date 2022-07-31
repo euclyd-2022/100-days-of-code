@@ -13,7 +13,8 @@ TMDB_API_KEY = "3f0182be967bf9b731377774abfa8540"
 
 
 class MyForm(FlaskForm):
-    update_rating = StringField(label='rating', validators=[DataRequired()])
+    update_rating = StringField(label='Rating out of 10', validators=[DataRequired()])
+    update_review = StringField(label='Review', validators=[DataRequired()])
     submit = SubmitField(label="Update")
 
 class addForm(FlaskForm):
@@ -56,10 +57,23 @@ class Movie(db.Model):
 # db.session.add(new_movie)
 # db.session.commit()
 
+# 10. Weird Science
+# 9. Kick Ass
+# 8. Supe 2
+# 7. Usual Suspects
+# 6. Flash G
+# 5. ESB
+# 4. Se7en
+# 3. Die hard
+# 2. Ferris B
+# 1. Aliens
+
 @app.route("/")
 def home():
-    all_movies = db.session.query(Movie).all()
-
+    all_movies = db.session.query(Movie).order_by(Movie.rating).all()
+    for n in range(len(all_movies)):
+        all_movies[n].ranking = len(all_movies) - n
+        db.session.commit()
     return render_template("index.html", movies=all_movies)
 
 @app.route("/edit/<int:id>", methods=['POST','GET'])
@@ -72,6 +86,7 @@ def edit(id):
         movie_to_update = Movie.query.get(id)
         # update using wtform
         movie_to_update.rating = request.form.get('update_rating')
+        movie_to_update.review = request.form.get('update_review')
         # update using range slider
         # movie_to_update.rating = request.form.get('rating')
         db.session.commit()
@@ -99,6 +114,32 @@ def add():
         data = response.json()['results']
         return render_template("select.html", options=data)
     return render_template("add.html", add=add_movie)
+
+
+@app.route("/select", methods=['POST','GET'])
+def select():
+    movieid=request.args.get('movieid')
+
+    response = requests.get(f'https://api.themoviedb.org/3/movie/{movieid}?api_key={TMDB_API_KEY}')
+    data = response.json()
+    print(data)
+    new_movie_id = add_new_movie(data)
+    return redirect(url_for('edit', id=new_movie_id))
+
+def add_new_movie(data):
+    new_movie = Movie(
+        title=data['original_title'],
+        year=data['release_date'],
+        description=data['overview'],
+        img_url=f"https://image.tmdb.org/t/p/w500{data['poster_path']}"
+    )
+    db.session.add(new_movie)
+    db.session.commit()
+    db.session.refresh(new_movie)
+    print(new_movie.id)
+    return new_movie.id
+
+
 
 
 

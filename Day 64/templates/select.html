@@ -17,7 +17,7 @@
     {% for option in options %}
 
 
-    <a href="{{url_for('add', id=option.id)}}">  {{ option.original_title }} - {{ option.release_date }}</a>
+    <a href="{{url_for('select', movieid=option.id)}}">  {{ option.original_title }} - {{ option.release_date }}</a>
     <br>
 
   </p>
