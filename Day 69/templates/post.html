@@ -1,4 +1,5 @@
 {% include "header.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
 
   <!-- Page Header -->
   <header class="masthead" style="background-image: url('{{post.img_url}}')">
@@ -10,7 +11,7 @@
             <h1>{{post.title}}</h1>
             <h2 class="subheading">{{post.subtitle}}</h2>
             <span class="meta">Posted by
-              <a href="#">{{post.author}}</a>
+              <a href="#">{{post.author.name}}</a>
               on {{post.date}}</span>
           </div>
         </div>
@@ -32,20 +33,42 @@
           {% endif %}
 
 
-
+                  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+    {% for message in messages %}
+      <p>{{ message }}</p>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
 <!--           Comments Area -->
+            {{ ckeditor.load() }}
+            {{ ckeditor.config(name='comment') | safe}}
+            {{ wtf.quick_form(form, novalidate=True, button_map={"submit": "primary"}) }}
+
+
+
           <div class="col-lg-8 col-md-10 mx-auto comment">
-              <ul class="commentList">
+
+                  {% if comments %}
+                  {% for comment in comments %}
+               <ul class="commentList">
                 <li>
                     <div class="commenterImage">
-                      <img src="https://pbs.twimg.com/profile_images/744849215675838464/IH0FNIXk.jpg"/>
+                     <!-- <img src="https://www.gravatar.com/avatar/{{comment.comment_author.id}}?d=monsterid"/> -->
+                        <img src="{{ comment.comment_author.email | gravatar }}"/>
+
                     </div>
-                    <div class="commentText">
-                      <p>Some comment</p>
-                      <span class="date sub-text">comment author name</span>
+                    <div class="comment.text">
+
+                      <p>{{comment.text.strip()}}</p>
+                      <span class="date sub-text">{{comment.comment_author.name}}</span>
+
                     </div>
                 </li>
-              </ul>
+                    </ul>
+                  {% endfor %}
+                  {% endif %}
+
             </div>
 
 

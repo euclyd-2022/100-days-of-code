@@ -6,7 +6,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship
 from flask_login import UserMixin, login_user, LoginManager, login_required, current_user, logout_user
-from forms import CreatePostForm, RegisterForm, LoginForm
+from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm
 from flask_gravatar import Gravatar
 from functools import wraps
 from flask import abort
@@ -18,6 +18,8 @@ Bootstrap(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 
+gravatar = Gravatar(app, size=100, rating='r', default='robohash', force_default=False, force_lower=False, use_ssl=False, base_url=None)
+
 ##CONNECT TO DB
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///blog.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -26,16 +28,9 @@ db = SQLAlchemy(app)
 
 ##CONFIGURE TABLES
 
-class BlogPost(db.Model):
-    __tablename__ = "blog_posts"
-    id = db.Column(db.Integer, primary_key=True)
-    author = db.Column(db.String(250), nullable=False)
-    title = db.Column(db.String(250), unique=True, nullable=False)
-    subtitle = db.Column(db.String(250), nullable=False)
-    date = db.Column(db.String(250), nullable=False)
-    body = db.Column(db.Text, nullable=False)
-    img_url = db.Column(db.String(250), nullable=False)
-# db.create_all()
+
+
+
 
 class User(UserMixin, db.Model):
     __tablename__ = "user"
@@ -43,7 +38,42 @@ class User(UserMixin, db.Model):
     name = db.Column(db.String(250), nullable=False)
     email = db.Column(db.String(250), unique=True, nullable=False)
     password = db.Column(db.String(250), nullable=False)
-# db.create_all()
+    # This will act like a List of BlogPost objects attached to each User.
+    # The "author" refers to the author property in the BlogPost class.
+    posts = relationship("BlogPost", back_populates="author")
+    comments = relationship("Comment", back_populates="comment_author")
+
+class BlogPost(db.Model):
+    __tablename__ = "blog_posts"
+    id = db.Column(db.Integer, primary_key=True)
+    #author = db.Column(db.String(250), nullable=False)
+    title = db.Column(db.String(250), unique=True, nullable=False)
+    subtitle = db.Column(db.String(250), nullable=False)
+    date = db.Column(db.String(250), nullable=False)
+    body = db.Column(db.Text, nullable=False)
+    img_url = db.Column(db.String(250), nullable=False)
+    # Create Foreign Key, "users.id" the users refers to the tablename of User.
+    author_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    # Create reference to the User object, the "posts" refers to the posts property in the User class.
+    author = relationship("User", back_populates="posts")
+    comments = relationship("Comment", back_populates="parent_post")
+
+class Comment(db.Model):
+    __tablename__ = "comment"
+    id = db.Column(db.Integer, primary_key=True)
+    text = db.Column(db.Text, nullable=False)
+    # ***************Child Relationship*************#
+    post_id = db.Column(db.Integer, db.ForeignKey("blog_posts.id"))
+    # Create Foreign Key, "users.id" the users refers to the tablename of User.
+    author_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    # Create reference to the User object, the "comments" refers to the comments property in the User class.
+    comment_author = relationship("User", back_populates="comments")
+    parent_post = relationship("BlogPost", back_populates="comments")
+
+db.create_all()
+
+
+
 
 #Create admin-only decorator
 def admin_only(f):
@@ -64,6 +94,7 @@ def load_user(user_id):
 @app.route('/')
 def get_all_posts():
     posts = BlogPost.query.all()
+
     return render_template("index.html", all_posts=posts, logged_in=current_user.is_authenticated)
 
 
@@ -109,10 +140,27 @@ def logout():
     return redirect(url_for('get_all_posts'))
 
 
-@app.route("/post/<int:post_id>")
+@app.route("/post/<int:post_id>", methods=['GET','POST'])
 def show_post(post_id):
     requested_post = BlogPost.query.get(post_id)
-    return render_template("post.html", post=requested_post,  logged_in=current_user.is_authenticated)
+    requested_comment = Comment.query.filter_by(post_id=post_id).all()
+    form = CommentForm()
+    if form.validate_on_submit():
+        new_comment = Comment(
+            text=form.text.data,
+            author_id=current_user.id,
+            post_id=post_id
+        )
+        if current_user.is_authenticated:
+            db.session.add(new_comment)
+            db.session.commit()
+        else:
+            flash("error - Please login to continue")
+        return redirect(url_for("get_all_posts"))
+
+    #author = User.query.get(requested_post.author_id)
+    #foreign key is sent as post.author.name
+    return render_template("post.html", form=form, post=requested_post, comments=requested_comment,  logged_in=current_user.is_authenticated)
 
 
 @app.route("/about")
@@ -125,7 +173,7 @@ def contact():
     return render_template("contact.html")
 
 @admin_only
-@app.route("/new-post")
+@app.route("/new-post", methods=['GET', 'POST'])
 def add_new_post():
     form = CreatePostForm()
     if form.validate_on_submit():

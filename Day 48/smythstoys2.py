@@ -6,6 +6,7 @@ from selenium.common.exceptions import NoSuchElementException
 
 
 options = webdriver.ChromeOptions()
+options.add_argument = {'user-data-dir':'C:/Users/theeu/AppData/Local/Google/Chrome/User Data/Default'}
 options.add_experimental_option("excludeSwitches", ["enable-automation"])
 options.add_experimental_option("detach", True)
 
