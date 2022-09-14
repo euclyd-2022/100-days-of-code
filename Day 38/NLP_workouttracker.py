@@ -1,6 +1,6 @@
 import requests
 from datetime import datetime
-from secrets import NLP_TOKEN,NLP_APP_ID,NLP_APP_KEY
+from secrets import NLP_TOKEN, NLP_APP_ID, NLP_APP_KEY
 
 
 ENDPOINT = "https://trackapi.nutritionix.com/v2/natural/exercise"
